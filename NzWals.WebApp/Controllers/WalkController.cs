@@ -33,9 +33,7 @@ namespace NzWals.WebApp.Controllers
                 var data = await response.Content.ReadFromJsonAsync<List<WalksVM>>();
                 return View(data);
             }
-
             return View("Error");
-
         }
      }
 }
