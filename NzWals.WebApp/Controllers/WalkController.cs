@@ -34,7 +34,7 @@ namespace NzWals.WebApp.Controllers
                 return View(data);
             }
 
-            return Unauthorized();
+            return View("Error");
 
         }
      }
