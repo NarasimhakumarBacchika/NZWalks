@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Register</h2>
+
+    <form id="registerForm" class="border p-4 rounded shadow-sm" style="max-width: 500px; margin: auto;">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username (Email)</label>
+            <input type="email" id="username" class="form-control" placeholder="Enter email" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Enter password" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="roles" class="form-label">Roles (comma-separated, optional)</label>
+            <input type="text" id="roles" class="form-control" placeholder="e.g., Reader,Writer" />
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Register</button>
+    </form>
+
+    <div id="result" class="mt-3 text-center"></div>
+</div>
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const rolesInput = document.getElementById("roles").value;
+
+        const registerData = {
+            username: username,
+            password: password,
+            roles: rolesInput ? rolesInput.split(',').map(role => role.trim()) : []
+        };
+
+        try {
+            const response = await fetch("http://localhost:5085/api/Auth/Register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(registerData)
+            });
+
+            const resultDiv = document.getElementById("result");
+
+            let result;
+            try {
+                result = await response.json();
+            } catch {
+                result = { message: "Unexpected response format." };
+            }
+
+            if (response.ok) {
+                resultDiv.style.color = "green";
+                resultDiv.innerText = result.message;
+                setTimeout(() => {
+                    window.location.href = "/Auth/Login";
+                }, 2000);
+            } else {
+                resultDiv.style.color = "red";
+                resultDiv.innerText = result.message || "Registration failed.";
+            }
+        } catch (error) {
+            console.error("Registration error:", error);
+            document.getElementById("result").innerText = "Server error. Please try again.";
+        }
+    });
+</script>
