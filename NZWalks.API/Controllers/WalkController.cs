@@ -85,7 +85,7 @@ namespace NZWalks.API.Controllers
 
             return Ok(mapper.Map<UpdateWalkDto>(WalkDomain));
         }
-        [HttpDelete]
+        [HttpDelete] // This is for delete for again 
         public async Task<IActionResult> Delete(Guid id)
         {
             var WalkDomain= await sqlWalkRepository.DeleteAsync(id);
